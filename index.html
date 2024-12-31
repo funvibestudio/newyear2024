@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte à rebours avec confettis</title>
+    <style>
+        /* Style général */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F7FA;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Éviter les barres de défilement */
+        }
+
+        h2 {
+            color: #5C80BC;
+            text-transform: uppercase;
+            font-size: 2em;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #333333;
+        }
+
+        /* Compte à rebours */
+        #countdown {
+            text-align: center;
+            margin: auto;
+            background-color: #E8EAF6;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #countdown h3 {
+            color: #333333;
+            font-size: 1.5rem;
+        }
+
+        #countdown-timer {
+            font-size: 2rem;
+            color: #FF6F61;
+            font-weight: bold;
+        }
+
+        /* Confettis */
+        .confetti {
+            position: fixed;
+            top: 0;
+            animation: fall linear infinite;
+            z-index: 9999;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+    <script>
+function getTargetDate() {
+    return new Date(2025, 0, 1, 0, 0, 0); // Date cible : 1er janvier 2025 à minuit
+}
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const targetDate = getTargetDate().getTime();
+    const distance = targetDate - now;
+
+    // Calcul du temps restant
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Affichage du compte à rebours
+    document.getElementById("countdown-timer").innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+
+    // Quand le compte à rebours est terminé
+    if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("countdown-timer").innerHTML = "Bonne année ! 🎉";
+    }
+}
+
+// Mettre à jour le compte à rebours chaque seconde
+const countdownInterval = setInterval(updateCountdown, 1000);
+
+function createSingleConfetti() {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    document.body.appendChild(confetti);
+
+    // Position et style aléatoire
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.width = Math.random() * 10 + 5 + 'px'; // Taille entre 5px et 15px
+    confetti.style.height = confetti.style.width; // Même taille pour hauteur et largeur
+    confetti.style.animationDuration = Math.random() * 3 + 3 + 's'; // Durée entre 3 et 6 secondes
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.borderRadius = '50%'; // Confettis circulaires
+
+    // Supprime le confetti après l'animation
+    setTimeout(() => {
+        confetti.remove();
+    }, 6000);
+}
+
+// Couleurs des confettis
+const colors = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d', '#43aa8b', '#577590'];
+
+// Ajouter des confettis en continu
+setInterval(createSingleConfetti, 200);
+    </script>
+</head>
+<body>
+    <!-- Compte à rebours -->
+    <div id="countdown">
+        <h3>Nouvel An dans :</h3>
+        <p id="countdown-timer"></p>
+    </div>
+</body>
+</html>
